@@ -1,4 +1,5 @@
 const url = require('url');
+const connection = require('../database/connection');
 
 function persistClient(name) {
   console.log('RegisterController - persistClient_start');

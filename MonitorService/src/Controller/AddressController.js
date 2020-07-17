@@ -1,3 +1,5 @@
+const connection = require('../database/connection');
+
 module.exports = {
   buildAddress(pIdAddress) {
     console.log('AddressController - buildAddress_start');
