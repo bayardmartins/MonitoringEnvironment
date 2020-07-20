@@ -7,6 +7,7 @@ module.exports = {
     connection: {
       filename: config.dbFilePath,
     },
+    useNullAsDefault: true,
     migrations: {
       directory: './src/database/migrations'
     }

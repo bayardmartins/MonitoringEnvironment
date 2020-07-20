@@ -1,49 +1,86 @@
 const url = require('url');
 const connection = require('../database/connection');
 
-function persistClient(name) {
-  console.log('RegisterController - persistClient_start');
-  console.log('RegisterController - persistClient - InsertIntoSQL');
-  console.log(`RegisterController - persistClient: ${name}`);
-  console.log('RegisterController - persistClient - returning idClient');
-  console.log('RegisterController - persistClient_finish');
-  return (200);
-}
-
-function persistAddress(urlAddress, idClient) {
-  console.log('RegisterController - persistAddress_start');
-  console.log('RegisterController - persistAddress - InsertIntoSQL');
-  console.log(`RegisterController - persistAddress ${urlAddress}, ${idClient}`);
-  console.log('RegisterController - persistAddress - returning idAddress');
-  console.log('RegisterController - persistAddress_finish');
-  return (200);
-}
-
 module.exports = {
-  postClient(req, res) {
-    console.log('RegisterController - postClient() start');
+  async postClient(req, res) {
     const urlParts = url.parse(req.url, true);
-    const { nameClient } = urlParts.query;
-    if (!nameClient) {
+    const { nmClient, deEmail } = urlParts.query;
+    if (!nmClient || !deEmail) {
       return res.sendstatus(400).send('parâmetros inválidos');
     }
-    try {
-      return res.sendStatus(persistClient(nameClient));
-    } catch (err) {
-      return res.sendStatus(err);
+    const client = await connection('CLIENT')
+      .insert([
+        {
+          NM_CLIENT: nmClient,
+          DE_EMAIL: deEmail,
+        }]);
+    if (!client) {
+      return res.send.status(400).json({ error: 'could not insert client' });
     }
+    return res.send(client);
   },
-  postAddress(req, res) {
-    console.log('RegisterController - postAddress() start');
+  async postAddress(req, res) {
+    const { idClient } = req.body;
     const urlParts = url.parse(req.url, true);
-    const { urlAddress, idClient } = urlParts.query;
+    const { urlAddress } = urlParts.query;
     if (!urlAddress && !idClient) {
       return res.sendStatus(400).send('parâmetros inválidos');
     }
     try {
-      return res.sendStatus(persistAddress(urlAddress, idClient));
-    } catch (err) {
-      return err;
+      const targetAddress = await connection('TARGET_ADDRESS')
+        .insert([
+          {
+            DE_TARGET_URL: urlAddress,
+            ID_CLIENT: idClient,
+          }]);
+      if (!targetAddress) {
+        return res.status(400).json({ error: 'could not insert client' });
+      }
+      return res.json(targetAddress);
+    } catch (error) {
+      return res.json(error);
     }
+  },
+  async getClient(req, res) {
+    const urlParts = url.parse(req.url, true);
+    const idClient = urlParts.query;
+    if (!idClient) {
+      return res.sendStatus(400).send('parâmetros inválidos');
+    }
+    try {
+      const client = await connection('CLIENT')
+        .where({ ID_CLIENT: idClient });
+      if (!client) {
+        return res.send().status(400).json({ error: 'could not find client.' });
+      }
+      return client;
+    } catch (error) {
+      return res.send().json(error);
+    }
+  },
+  async getAddress(req, res) {
+    const urlParts = url.parse(req.url, true);
+    const idAddress = urlParts.query;
+    if (!idAddress) {
+      return res.sendStatus(400).send('parâmetros inválidos');
+    }
+    try {
+      const address = await connection('ADDRESS')
+        .where({ ID_ADDRESS: idAddress });
+      if (!address) {
+        return res.send().status(400).json({ error: 'could not find client.' });
+      }
+      return address;
+    } catch (error) {
+      return res.send().json(error);
+    }
+  },
+  async getAddressList(req, res) {
+    const addressList = await connection('ADDRESS');
+    return res.json().send(addressList);
+  },
+  async getClientList(req, res) {
+    const clientList = await connection('CLIENT');
+    return res.json().send(clientList);
   },
 };

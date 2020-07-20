@@ -5,6 +5,7 @@ exports.up = function(knex) {
       table.bigIncrements('ID_TARGET_ADDRESS');
       table.string('DE_TARGET_URL');
       table.integer('ID_CLIENT');
+      table.boolean('IS_ACTIVE');
   
       table.foreign('ID_CLIENT').references('ID_CLIENT').inTable('CLIENT');
     });

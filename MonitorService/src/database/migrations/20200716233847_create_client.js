@@ -5,8 +5,10 @@ exports.up = function(knex) {
       table.increments('ID_CLIENT');
       table.string('NM_CLIENT').notNullable();
       table.string('DE_EMAIL').notNullable();
+      table.boolean('IS_ACTIVE');
     });
   };
+  
   
   exports.down = function (knex) {
     return knex.schema.dropTable('CLIENT');
