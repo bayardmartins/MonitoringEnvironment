@@ -8,16 +8,18 @@ async function loop () {
     do {
         const addressList = await address.getAddressList();
         if(addressList){
-            addressList.forEach(address => {
+            for(let i = 0; i < addressList.length; i++)
+            {
                 try {
-                    monitor.monitorAddress(address);
+                    monitor.monitorAddress(addressList[0].ID_TARGET_ADDRESS);
                 } catch (err) {
                     logger.insertError(err, 'server -> loop()');
-                }        
-            })
+                } 
+            };
         } else {
             sleep(5000);
         }
+        sleep(config.qtSecMustWait);
     } while (true);
 }
 

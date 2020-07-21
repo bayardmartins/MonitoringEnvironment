@@ -34,7 +34,8 @@ routes.get('/address/', celebrate({
   }),
 }), RegisterController.getAddress);
 
-routes.get('/address/', RegisterController.getAddressList);
-routes.get('/client/', RegisterController.getClientList);
+routes.get('/addressList/', RegisterController.getAddressList);
+routes.get('/clientList/', RegisterController.getClientList);
+routes.get('/monitoring/', RegisterController.getMonitoring);
 
 module.exports = routes;
