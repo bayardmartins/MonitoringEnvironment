@@ -18,7 +18,6 @@ export default function Page() {
             deEmail,
         };
         try{
-            console.log(data);
             await api.post(`client/?nmClient=${data.deName}&deEmail=${data.deEmail}`);
             alert('Cliente cadastrado');
         }catch (err) {
@@ -32,8 +31,6 @@ export default function Page() {
             idClient,
         };
         try{
-            console.log('post address:');
-            console.log(data);
             await api.post(`address/?urlAddress=${data.deTargetAddress}`, {idClient});
             alert('Endereço cadastrado');
         }catch (err) {
@@ -59,7 +56,6 @@ export default function Page() {
         };
         try{
             const address = await api.get(`address/?idAddress=${data.idGetAddress}`)
-            console.log(address);
             alert(`url: ${address.data['DE_TARGET_URL']} ID cliente: ${address.data['ID_CLIENT']}`)
         }catch (err) {
             alert('Erro ao cadastrar cliente. Tente novamente.')
@@ -70,7 +66,6 @@ export default function Page() {
         e.preventDefault();
         try{
             const deResult = await api.get('clientList');
-            console.log(deResult.data);
 
             const deClientList = deResult.data.map(function(row){
                 return `<br> ID: ${row.ID_CLIENT} Name: ${row.NM_CLIENT} E-mail: ${row.DE_EMAIL}`;
@@ -86,8 +81,7 @@ export default function Page() {
         e.preventDefault();
         try{
             const deResult = await api.get('addressList');
-            console.log(deResult.data);
-
+            
             const deAddressList = deResult.data.map(function(row){
                 return `<br> ID: ${row.ID_TARGET_ADDRESS} Url: ${row.DE_TARGET_URL} ID Cliente: ${row.ID_CLIENT}`;
             });
@@ -102,8 +96,7 @@ export default function Page() {
         e.preventDefault();
         try{
             const deResult = await api.get('monitoring');
-            console.log(deResult.data);
-
+            
             const deMonitoringList = deResult.data.map(function(row){
                 return `<br> ID: ${row.ID_MONITORING} Data: ${row.DT_REGISTER} ID Cliente: ${row.ID_CLIENT} ID Endereço: ${row.ID_TARGET_ADDRESS} Tempo de resposta ${row.NU_ELAPSED_TIME} Status de Resposta ${row.ID_STATUS_RESPONSE}`;
             });
