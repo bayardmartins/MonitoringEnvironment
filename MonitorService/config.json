@@ -1,3 +1,7 @@
 {
-    "qtSecMustWait" : 10000
+    "qtSecMustWait" : 60000,
+    "dbFilePath" : "./src/database/db.sqlite",
+    "dbName" : "database",
+    "dbUser" : "user",
+    "dbPassword" : "password"
 }

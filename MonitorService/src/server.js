@@ -2,19 +2,26 @@ const sleep = require('system-sleep');
 const monitor = require('./Controller/MonitorController');
 const address = require('./Controller/AddressController');
 const config = require('../config.json');
+const logger = require('./Helper/LogHelper.js');
 
-const addressList = address.getAddressList();
+async function loop () {
+    do {
+        const addressList = await address.getAddressList();
+        console.log(addressList);
+        if(addressList){
+            for(let i = 0; i < addressList.length; i++)
+            {
+                try {
+                    monitor.monitorAddress(addressList[i].ID_TARGET_ADDRESS);
+                } catch (err) {
+                    logger.insertError(err, 'server -> loop()');
+                } 
+            };
+        } else {
+            sleep(5000);
+        }
+        sleep(config.qtSecMustWait);
+    } while (true);
+}
 
-do {
-  addressList.forEach((element) => {
-    try {
-      console.log('Server getAddressStatus_start');
-      monitor.getAddressStatus(element);
-      console.log(`Server getAddressStatus_finish: ${element}\n`);
-      sleep(5000);
-    } catch (err) {
-      console.log(`Insert into SQL: exception: ${err}`);
-    }
-  });
-  sleep(config.qtMSecMustWait);
-} while (true);
+loop();

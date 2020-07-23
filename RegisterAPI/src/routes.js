@@ -8,15 +8,34 @@ const routes = express.Router();
 
 routes.post('/client/', celebrate({
   [Segments.QUERY]: Joi.object().keys({
-    nameClient: Joi.string(),
+    nmClient: Joi.string(),
+    deEmail: Joi.string(),
   }),
 }), RegisterController.postClient);
 
 routes.post('/address/', celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    idClient: Joi.required(),
+  }),
   [Segments.QUERY]: Joi.object().keys({
     urlAddress: Joi.string(),
-    idClient: Joi.number(),
   }),
 }), RegisterController.postAddress);
+
+routes.get('/client/', celebrate({
+  [Segments.QUERY]: Joi.object().keys({
+    idClient: Joi.number(),
+  }),
+}), RegisterController.getClient);
+
+routes.get('/address/', celebrate({
+  [Segments.QUERY]: Joi.object().keys({
+    idAddress: Joi.number(),
+  }),
+}), RegisterController.getAddress);
+
+routes.get('/addressList/', RegisterController.getAddressList);
+routes.get('/clientList/', RegisterController.getClientList);
+routes.get('/monitoring/', RegisterController.getMonitoring);
 
 module.exports = routes;
