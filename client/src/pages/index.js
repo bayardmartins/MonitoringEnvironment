@@ -66,6 +66,54 @@ export default function Page() {
         }
     }
 
+    async function getClientList(e) {
+        e.preventDefault();
+        try{
+            const deResult = await api.get('clientList');
+            console.log(deResult.data);
+
+            const deClientList = deResult.data.map(function(row){
+                return `<br> ID: ${row.ID_CLIENT} Name: ${row.NM_CLIENT} E-mail: ${row.DE_EMAIL}`;
+            });
+            var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=840,height=640");
+            win.document.body.innerHTML = deClientList;
+        }catch (err) {
+            alert('Erro ao consultar clientes. Tente novamente.')
+        }
+    }
+
+    async function getAddressList(e) {
+        e.preventDefault();
+        try{
+            const deResult = await api.get('addressList');
+            console.log(deResult.data);
+
+            const deAddressList = deResult.data.map(function(row){
+                return `<br> ID: ${row.ID_TARGET_ADDRESS} Url: ${row.DE_TARGET_URL} ID Cliente: ${row.ID_CLIENT}`;
+            });
+            var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=840,height=640");
+            win.document.body.innerHTML = deAddressList;
+        }catch (err) {
+            alert('Erro ao consultar endereços. Tente novamente.')
+        }
+    }
+
+    async function getMonitoringList(e) {
+        e.preventDefault();
+        try{
+            const deResult = await api.get('monitoring');
+            console.log(deResult.data);
+
+            const deMonitoringList = deResult.data.map(function(row){
+                return `<br> ID: ${row.ID_MONITORING} Data: ${row.DT_REGISTER} ID Cliente: ${row.ID_CLIENT} ID Endereço: ${row.ID_TARGET_ADDRESS} Tempo de resposta ${row.NU_ELAPSED_TIME} Status de Resposta ${row.ID_STATUS_RESPONSE}`;
+            });
+            var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=840,height=640");
+            win.document.body.innerHTML = deMonitoringList;
+        }catch (err) {
+            alert('Erro ao consultar endereços. Tente novamente.')
+        }
+    }
+
     return (
         <div className="page-container">
                 <section>
@@ -111,7 +159,16 @@ export default function Page() {
                     onChange={e => getAddress(e.target.value)}
                     />
                     <button className="button" type="submit">Consultar Endereço</button>
+                </form>
 
+                <form onSubmit={getClientList}>
+                    <button className="button" type="submit">Consultar todos Clientes</button>
+                </form>
+                <form onSubmit={getAddressList}>
+                    <button className="button" type="submit">Consultar todos Endereços</button>
+                </form>
+                <form onSubmit={getMonitoringList}>
+                    <button className="button" type="submit">Consultar todos Monitoramentos</button>
                 </form>
             </div>
         </div>

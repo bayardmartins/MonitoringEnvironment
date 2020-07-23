@@ -91,7 +91,7 @@ module.exports = {
   async getClientList(req, res) {
     const clientList = await connection('CLIENT')
       .select('*');
-    return res.send(clientList);
+    return res.send(clientList).json();
   },
   async getMonitoring(req, res) {
     const logList = await connection('MONITORING')
