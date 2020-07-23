@@ -7,7 +7,6 @@ const logger = require('./Helper/LogHelper.js');
 async function loop () {
     do {
         const addressList = await address.getAddressList();
-        console.log(addressList);
         if(addressList){
             for(let i = 0; i < addressList.length; i++)
             {

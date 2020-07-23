@@ -4,9 +4,7 @@ const connection = require('../database/connection');
 module.exports = {
   async postClient(req, res) {
     const urlParts = url.parse(req.url, true);
-    console.log(req.url);
     const { nmClient, deEmail } = urlParts.query;
-    console.log(`name ${nmClient} email ${deEmail}`);
     if (!nmClient || !deEmail) {
       return res.status(400).send('parâmetros inválidos');
     }
@@ -65,16 +63,13 @@ module.exports = {
   async getAddress(req, res) {
     const urlParts = url.parse(req.url, true);
     const { idAddress } = urlParts.query;
-    console.log(idAddress);
     if (!idAddress) {
       return res.sendStatus(400).send('parâmetros inválidos');
     }
     try {
-      console.log('aqui');
       const address = await connection('TARGET_ADDRESS')
         .where({ ID_TARGET_ADDRESS: idAddress })
         .select(['DE_TARGET_URL', 'ID_CLIENT']);
-      console.log(address);
       return res.send(address[0]);
     } catch (error) {
       return res.status(500).send(error);
