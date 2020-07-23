@@ -4,9 +4,11 @@ const connection = require('../database/connection');
 module.exports = {
   async postClient(req, res) {
     const urlParts = url.parse(req.url, true);
+    console.log(req.url);
     const { nmClient, deEmail } = urlParts.query;
+    console.log(`name ${nmClient} email ${deEmail}`);
     if (!nmClient || !deEmail) {
-      return res.sendstatus(400).send('parâmetros inválidos');
+      return res.status(400).send('parâmetros inválidos');
     }
     const client = await connection('CLIENT')
       .insert([
@@ -49,13 +51,13 @@ module.exports = {
     const urlParts = url.parse(req.url, true);
     const { idClient } = urlParts.query;
     if (!idClient) {
-      return res.sendStatus(400).send('parâmetros inválidos');
+      return res.status(400).send('parâmetros inválidos');
     }
     try {
       const client = await connection('CLIENT')
         .where({ ID_CLIENT: idClient })
         .select(['NM_CLIENT', 'DE_EMAIL', 'IS_ACTIVE']);
-      return res.send(client);
+      return res.send(client[0]);
     } catch (error) {
       return res.status(500).send('error');
     }
@@ -63,18 +65,19 @@ module.exports = {
   async getAddress(req, res) {
     const urlParts = url.parse(req.url, true);
     const { idAddress } = urlParts.query;
+    console.log(idAddress);
     if (!idAddress) {
       return res.sendStatus(400).send('parâmetros inválidos');
     }
     try {
+      console.log('aqui');
       const address = await connection('TARGET_ADDRESS')
-        .where({ ID_ADDRESS: idAddress });
-      if (!address) {
-        return res.send().status(400).json({ error: 'could not find client.' });
-      }
-      return address;
+        .where({ ID_TARGET_ADDRESS: idAddress })
+        .select(['DE_TARGET_URL', 'ID_CLIENT']);
+      console.log(address);
+      return res.send(address[0]);
     } catch (error) {
-      return res.send().json(error);
+      return res.status(500).send(error);
     }
   },
   async getAddressList(req, res) {

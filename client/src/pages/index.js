@@ -8,10 +8,8 @@ export default function Page() {
     const [deEmail, setEmail] = useState('');
     const [deTargetAddress, setAddress] = useState('');
     const [idClient, setIdClient] = useState('');
-    const [deClient, getClient] = useState('');
-    const [idGetClient, setDeClient] = useState('');
-    const [deAddress, getAddress] = useState('');
-    const [idGetAddress, setDeAddress] = useState('');
+    const [idGetClient, getClient] = useState('');
+    const [idGetAddress, getAddress] = useState('');
 
     async function addClient(e) {
         e.preventDefault();
@@ -21,7 +19,8 @@ export default function Page() {
         };
         try{
             console.log(data);
-            await api.post('client', data)
+            await api.post(`client/?nmClient=${data.deName}&deEmail=${data.deEmail}`);
+            alert('Cliente cadastrado');
         }catch (err) {
             alert('Erro ao cadastrar cliente. Tente novamente.')
         }
@@ -33,25 +32,24 @@ export default function Page() {
             idClient,
         };
         try{
+            console.log('post address:');
             console.log(data);
-            await api.post('/address/', data)
+            await api.post(`address/?urlAddress=${data.deTargetAddress}`, {idClient});
+            alert('Endereço cadastrado');
         }catch (err) {
             alert('Erro ao cadastrar endereço. Tente novamente.')
         }
     }
     async function getClientData(e) {
         e.preventDefault();
-
         const data = {
             idGetClient,
         };
-
         try{
-            console.log(data);
-            await api.get('client', data, {
-            })
+            const client = await api.get(`client/?idClient=${data.idGetClient}`)
+            alert(`nome: ${client.data['NM_CLIENT']} email: ${client.data['DE_EMAIL']}`);
         }catch (err) {
-            alert('Erro ao cadastrar cliente. Tente novamente.')
+            alert('Erro ao consultar cliente. Tente novamente.')
         }
     }
     async function getAddressData(e) {
@@ -60,9 +58,9 @@ export default function Page() {
             idGetAddress,
         };
         try{
-            console.log(data);
-            await api.get('address', data, {
-            })
+            const address = await api.get(`address/?idAddress=${data.idGetAddress}`)
+            console.log(address);
+            alert(`url: ${address.data['DE_TARGET_URL']} ID cliente: ${address.data['ID_CLIENT']}`)
         }catch (err) {
             alert('Erro ao cadastrar cliente. Tente novamente.')
         }
@@ -74,17 +72,16 @@ export default function Page() {
                     <h1>Menu</h1>
                 </section>
             <div className="content">
+
                 <form onSubmit={addClient}>
                     <input placeholder="Nome do Cliente" 
                     value={deName}
                     onChange={e => setName(e.target.value)}
                     />
-
                     <input placeholder="E-mail" 
                     value={deEmail}
                     onChange={e => setEmail(e.target.value)}
                     />
-                   
                     <button className="button" type="submit">Cadastrar Cliente</button>
                 </form>
 
@@ -93,12 +90,10 @@ export default function Page() {
                     value={deTargetAddress}
                     onChange={e => setAddress(e.target.value)}
                     />
-
                     <input placeholder="ID cliente" 
                     value={idClient}
                     onChange={e => setIdClient(e.target.value)}
                     />
-                   
                     <button className="button" type="submit">Cadastrar Endereço</button>
                 </form>
 
@@ -107,12 +102,6 @@ export default function Page() {
                     value={idGetClient}
                     onChange={e => getClient(e.target.value)}
                     />
-
-                    <input 
-                    value={deClient}
-                    onChange={e => setDeClient(e.target.value)}
-                    />
-                   
                     <button className="button" type="submit">Consultar Cliente</button>
                 </form>
  
@@ -121,13 +110,8 @@ export default function Page() {
                     value={idGetAddress}
                     onChange={e => getAddress(e.target.value)}
                     />
-
-                    <input 
-                    value={deAddress}
-                    onChange={e => setDeAddress(e.target.value)}
-                    />
-                   
                     <button className="button" type="submit">Consultar Endereço</button>
+
                 </form>
             </div>
         </div>
